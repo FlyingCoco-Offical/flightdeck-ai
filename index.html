@@ -10,7 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
-        /* Light Mode Palette applied directly as the default root style */
         :root {
             --bg-gradient: radial-gradient(circle at 50% 0%, #f1f5f9 0%, #cbd5e1 100%);
             --bg-color: #cbd5e1;
@@ -45,6 +44,26 @@
             text-shadow: 0 4px 20px rgba(2, 132, 199, 0.15);
         }
 
+        /* Gear Button Styling */
+        .settings-toggle-btn {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
+        }
+        
+        .settings-toggle-btn:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(2, 132, 199, 0.2);
+        }
+
         .glass-panel {
             background: var(--panel-bg);
             backdrop-filter: blur(12px);
@@ -52,6 +71,7 @@
             border: 1px solid var(--border-color);
             border-radius: 16px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
         }
 
         .form-label-title {
@@ -152,6 +172,25 @@
 
 <div class="container py-5" style="max-width: 1000px;">
 
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div></div>
+        <button id="settingsToggle" class="settings-toggle-btn" onclick="toggleSettings()">
+            ⚙️ Settings
+        </button>
+    </div>
+
+    <div id="settingsPanel" class="glass-panel p-4 mb-4" style="display: none;">
+        <label for="apiKeyInput" class="form-label form-label-title">OpenRouter API Key <span class="text-danger">*</span></label>
+        <input
+            type="password"
+            id="apiKeyInput"
+            class="form-control"
+            placeholder="Paste your 'sk-or-v1-...' key here"
+            oninput="saveApiKey(this.value)"
+        >
+        <div class="form-text text-muted mt-1">Your key is saved locally in your browser's persistent storage. It is never sent to any server other than OpenRouter.</div>
+    </div>
+
     <div class="text-center mb-5">
         <h1 class="hero-title display-4 mb-2">FlightDeckAI</h1>
         <p class="text-muted fs-5">Next-Gen Intelligent IFR Route Dispatcher</p>
@@ -162,10 +201,13 @@
             
             <div class="col-md-7">
                 <div class="mb-4">
-                    <label for="request" class="form-label form-label-title">Route Preference & Criteria</label>
+                    <label for="request" class="form-label form-label-title">
+                        Route Preference & Criteria <span class="text-danger">*</span>
+                    </label>
                     <textarea
                         id="request"
                         rows="4"
+                        required
                         class="form-control"
                         placeholder="e.g. Scenic mountain passage, stormy approaches to challenge, or sunny coastlines..."></textarea>
                 </div>
@@ -173,9 +215,12 @@
 
             <div class="col-md-5 d-flex flex-column justify-content-between">
                 <div class="mb-3">
-                    <label for="origin" class="form-label form-label-title">Origin Airport (ICAO)</label>
+                    <label for="origin" class="form-label form-label-title">
+                        Origin Airport (ICAO) <span class="text-danger">*</span>
+                    </label>
                     <input
                         id="origin"
+                        required
                         class="form-control"
                         placeholder="e.g. KBOS, EGLL, RJTT"
                         style="text-transform: uppercase;"
@@ -183,8 +228,10 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="aircraft" class="form-label form-label-title">Aircraft Profile</label>
-                    <select id="aircraft" class="form-select">
+                    <label for="aircraft" class="form-label form-label-title">
+                        Aircraft Profile <span class="text-danger">*</span>
+                    </label>
+                    <select id="aircraft" class="form-select" required>
                         <option value="C172">Cessna 172 Skyhawk (110 kts)</option>
                         <option value="SR22">Cirrus SR22 (180 kts)</option>
                         <option value="TBM9">Daher TBM 930 (320 kts)</option>
@@ -232,3 +279,37 @@
                     style="width:0%">
                 </div>
             </div>
+        </div>
+
+    </div>
+
+    <div id="output" class="mb-5"></div>
+
+</div>
+
+<script>
+    // Load key from localStorage immediately when script runs
+    const savedKey = localStorage.getItem('openrouter_api_key');
+    if (savedKey) {
+        document.getElementById('apiKeyInput').value = savedKey;
+    }
+
+    // Save key to localStorage when typed
+    function saveApiKey(value) {
+        localStorage.setItem('openrouter_api_key', value.trim());
+    }
+
+    function toggleSettings() {
+        const panel = document.getElementById('settingsPanel');
+        if (panel.style.display === 'none') {
+            panel.style.display = 'block';
+        } else {
+            panel.style.display = 'none';
+        }
+    }
+</script>
+
+<py-script src="main.py"></py-script>
+
+</body>
+</html>

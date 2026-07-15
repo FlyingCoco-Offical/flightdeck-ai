@@ -75,6 +75,7 @@ CRITICAL DISTANCE LAWS:
 3. Recommend 2 to 3 real-world, valid destination airport codes that are matching this distance within +/- 20% range from the origin. 
    - DO NOT recommend destination airports that are geographically impossible for this duration and speed.
    - Do your best to estimate real-world distances. Boston to Florida is over 800 miles and is strictly illegal for a Cessna 172 on a short duration!
+   - If it says a time, strictly dont go over, only go under or exactly the same.
 
 You MUST respond with a JSON object matching this exact format:
 {
